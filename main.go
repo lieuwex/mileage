@@ -50,7 +50,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
 	var entries []Entry
-	err := coll.Find(nil).All(&entries)
+	err := coll.Find(nil).Sort("-date").All(&entries)
 	if err != nil {
 		serverError(w, err)
 		return
