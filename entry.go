@@ -2,17 +2,13 @@ package main
 
 import "time"
 
-type EntryType int
-
-const (
-	mileage EntryType = iota
-	payement
-)
-
 type Entry struct {
-	// typ EntryType
-	Type    string    `json:"type"`
-	Price   float64   `json:"price"`
-	Mileage int64     `json:"mileage"`
-	Date    time.Time `json:"date"`
+	Type  string  `json:"type"`
+	Price float64 `json:"price"`
+
+	BeginMileage int64 `json:"beginMileage"`
+	EndMileage   int64 `json:"endMileage"`
+
+	BeginDate time.Time `json:"beginDate"`
+	EndDate   time.Time `json:"endDate"`
 }

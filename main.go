@@ -39,7 +39,8 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("received new entry: %#v", entry)
 
-	entry.Date = bson.Now()
+	// REVIEW: startDate
+	entry.EndDate = bson.Now()
 
 	err = coll.Insert(&entry)
 	if err != nil {
@@ -49,8 +50,8 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func entriesHandler(w http.ResponseWriter, r *http.Request) {
-	var entries []Entry
-	err := coll.Find(nil).Sort("-date").All(&entries)
+	entries := make([]Entry, 0)
+	err := coll.Find(nil).Sort("date").All(&entries)
 	if err != nil {
 		serverError(w, err)
 		return
