@@ -2,6 +2,15 @@ package main
 
 import "time"
 
+type Addition struct {
+	Type string `json:"type"`
+
+	Price   float64 `json:"price"`
+	Mileage int64   `json:"mileage"`
+
+	Date time.Time `json:"date"`
+}
+
 type Entry struct {
 	Type  string  `json:"type"`
 	Price float64 `json:"price"`
