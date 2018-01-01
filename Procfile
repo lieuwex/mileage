@@ -1,1 +1,1 @@
-web: mileage mongo entries
+web: mileage mongo
