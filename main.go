@@ -46,6 +46,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch entry.Type {
 	case "trip-start":
+		currentTripColl.RemoveAll(nil)
 		if err = currentTripColl.Insert(&entry); err != nil {
 			log.Println(err.Error())
 		}
@@ -58,7 +59,8 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(trips) != 1 {
-			log.Printf("expected length of trips to be 1, got %d", len(trips))
+			err = fmt.Errorf("expected length of trips to be 1, got %d", len(trips))
+			serverError(w, err)
 			return
 		}
 
