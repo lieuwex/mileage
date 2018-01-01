@@ -16,7 +16,17 @@ import (
 var entriesColl, currentTripColl *mgo.Collection
 
 func frontHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("TODO"))
+	slug := r.URL.Path[1:]
+	switch slug {
+	case "index.js", "index.css":
+		http.ServeFile(w, r, "web/"+slug)
+	case "":
+		http.ServeFile(w, r, "web/index.html")
+
+	default:
+		err := fmt.Errorf("404 something idk")
+		serverError(w, err)
+	}
 }
 
 func addHandler(w http.ResponseWriter, r *http.Request) {
@@ -155,7 +165,7 @@ func main() {
 	currentTripColl = session.DB(dbName).C("currentTrip")
 
 	mux := http.NewServeMux()
-	mux.Handle("/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
+	mux.HandleFunc("/", frontHandler)
 	mux.HandleFunc("/add", addHandler)
 	mux.HandleFunc("/entries", entriesHandler)
 	mux.HandleFunc("/currentTrip", currentTripHandler)
