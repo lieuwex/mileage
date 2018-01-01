@@ -1,0 +1,25 @@
+{
+	"name": "mileage",
+	"version": "1.0.0",
+	"description": "",
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-plugin-lodash": "^3.3.2",
+		"babel-plugin-transform-object-rest-spread": "^6.26.0",
+		"babel-plugin-transform-strict-mode": "^6.24.1",
+		"babel-preset-es2015-rollup": "^3.0.0",
+		"rollup-plugin-babel": "^3.0.2",
+		"rollup-plugin-commonjs": "^8.2.6",
+		"rollup-plugin-node-resolve": "^3.0.0",
+		"rollup-watch": "^4.3.1"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "Lieuwe Rooijakkers <lieuwerooijakkers@gmail.com> (http://www.lieuwe.xyz/)",
+	"license": "ISC",
+	"dependencies": {
+		"lit-html": "^0.7.1"
+	}
+}

@@ -1,0 +1,60 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+.loading {
+	font-weight: bold;
+}
+
+div#currentInfo {
+	font-size: 175%;
+	font-weight: 200;
+}
+
+div#currentInfo > .divider:before {
+	content: "~";
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#currentInfo > #priceEstimate > #cents {
+	margin-left: 3px;
+	vertical-align: super;
+	font-size: 80%;
+}
+
+#currentInfo > #priceEstimate > #euros {
+	font-size: 110%;
+	font-weight: bold;
+}
+
+#currentInfo > #priceEstimate > #euro {
+	margin-right: 2px;
+}
+
+#entries > .entry {
+	border: 1px lightgray solid;
+	border-radius: 3px;
+	padding: 10px;
+	margin-bottom: 5px;
+	position: relative;
+	display: flex;
+}
+
+#entries > .entry > .type {
+	display: flex;
+	align-items: center;
+	font-size: 120%;
+	font-weight: 200;
+	width: 85px;
+	justify-content: flex-end;
+	margin-right: 15px;
+}
+
+#entries > .entry > .rows > .row:not(:last-child) {
+	margin-bottom: 3px;
+}

@@ -1,2 +1,4 @@
 db
 mileage
+node_modules
+web/index.js
