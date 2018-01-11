@@ -19,19 +19,35 @@ const radioOnChange = event => {
 	})[el.id];
 	renderApp();
 };
-const formSwitchPanel = html`
-	<form>
-		<label>
-			Add trip
-			<input type="radio" id="trip" name="formSwitch" onchange=${radioOnChange} checked />
-		</label>
+const formSwitchPanel = () => currentTrip.then(trip => {
+	if (trip != null) {
+		return undefined;
+	}
 
-		<label>
-			Add payment
-			<input type="radio" id="payment" name="formSwitch" onchange=${radioOnChange} />
-		</label>
-	</form>
-`;
+	return html`
+		<form>
+			<label>
+				Add trip
+				<input
+					type="radio"
+					id="trip"
+					name="formSwitch"
+					onchange=${radioOnChange}
+					checked=${choosenForm === 'startTrip'} />
+			</label>
+
+			<label>
+				Add payment
+				<input
+					type="radio"
+					id="payment"
+					name="formSwitch"
+					onchange=${radioOnChange}
+					checked=${choosenForm === 'payment'} />
+			</label>
+		</form>
+	`;
+});
 
 // TODO: automatically update this
 const currentTrip = fetch('/currentTrip').then(r => r.json());
@@ -48,7 +64,7 @@ const currentForm = () => {
 
 const app = () => html`
 	${currentPrice()}
-	${until(currentTrip.then(r => r ? undefined : formSwitchPanel), loading)}
+	${until(formSwitchPanel(), loading)}
 	${until(currentForm(), loading)}
 	${entriesList()}
 `;
