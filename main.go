@@ -24,8 +24,7 @@ func frontHandler(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "web/index.html")
 
 	default:
-		err := fmt.Errorf("404 something idk")
-		serverError(w, err)
+		http.Error(w, "404 something idk", 404)
 	}
 }
 
