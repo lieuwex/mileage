@@ -52,15 +52,13 @@ const formSwitchPanel = () => currentTrip.then(trip => {
 // TODO: automatically update this
 const currentTrip = fetch('/currentTrip').then(r => r.json());
 
-const currentForm = () => {
-	return currentTrip.then(r => {
-		const formType = r == null ?
-			choosenForm :
-			'endTrip';
+const currentForm = () => currentTrip.then(r => {
+	const formType = r == null ?
+		choosenForm :
+		'endTrip';
 
-		return form(formType);
-	});
-};
+	return form(formType);
+});
 
 const app = () => html`
 	${currentPrice()}
