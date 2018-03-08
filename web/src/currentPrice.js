@@ -18,6 +18,10 @@ const priceInfo = price => {
 	const euros = Math.floor(price);
 	const cents = (price - euros).toFixed(4).slice(2);
 
+	if (!price) {
+		return undefined;
+	}
+
 	return html`
 		<span id="priceEstimate">
 			<span id="euro">&euro;</span>
@@ -32,10 +36,17 @@ export default () => {
 		unpayedDistance(),
 		estimatedPrice(),
 	]).then(([ distance, price ]) => {
+		const mInfo = mileageInfo(distance);
+		const pInfo = priceInfo(price);
+
 		return html`
-			${mileageInfo(distance)}
-			<span class="divider"></span>
-			${priceInfo(price)}
+			${mInfo}
+			${pInfo == null ?
+				undefined :
+				html`
+					<span class="divider"></span>
+					${pInfo}
+				`}
 		`
 	});
 
