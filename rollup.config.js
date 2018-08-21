@@ -3,18 +3,20 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
-	entry: 'web/src/index.js',
+	input: 'web/src/index.js',
+	output: {
+		format: 'iife',
+	},
+
 	plugins: [
+		commonjs(),
+
 		nodeResolve({
 			jsnext: true,
 			main: true,
 			browser: true,
 		}),
 
-		commonjs(),
-
 		babel(),
 	],
-
-	format: 'iife',
 };

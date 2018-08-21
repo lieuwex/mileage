@@ -59,6 +59,14 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		if err = currentTripColl.Insert(&entry); err != nil {
 			log.Println(err.Error())
 		}
+
+		bytes, err = json.Marshal(entry)
+		if err != nil {
+			serverError(w, err)
+			return
+		}
+		w.Write(bytes)
+
 		return
 	case "trip-end":
 		trips := make([]Addition, 0)

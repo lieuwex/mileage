@@ -1,5 +1,5 @@
 import { html } from 'lit-html';
-import { unpayedDistance, estimatedPrice } from './calc.js';
+import { unpayedDistance, estimatedPrice } from '../calc.js';
 import { until } from 'lit-html/lib/until';
 import { loading } from './utils.js';
 
@@ -31,10 +31,10 @@ const priceInfo = price => {
 	`;
 };
 
-export default () => {
+export default state => {
 	const info = Promise.all([
-		unpayedDistance(),
-		estimatedPrice(),
+		unpayedDistance(state),
+		estimatedPrice(state),
 	]).then(([ distance, price ]) => {
 		const mInfo = mileageInfo(distance);
 		const pInfo = priceInfo(price);

@@ -1,5 +1,7 @@
 import { html } from 'lit-html';
 
+import { updateEntries } from '../api/api.js';
+
 const submit = info => {
 	return fetch('/add', {
 		method: 'POST',
@@ -17,11 +19,16 @@ const startTripForm = {
 		`;
 	},
 
-	handler() {
+	handler(state) {
 		const input = document.getElementById('beginMileage');
+		const mileage = Number.parseInt(input.value, 10);
+
 		submit({
 			type: 'trip-start',
-			mileage: Number.parseInt(input.value, 10),
+			mileage,
+		}).then(res => res.json()).then(trip => {
+			state.currentTrip = trip;
+			window.renderApp(state);
 		});
 	},
 };
@@ -36,11 +43,16 @@ const endTripForm = {
 		`;
 	},
 
-	handler() {
+	handler(state) {
 		const input = document.getElementById('endMileage');
 		submit({
 			type: 'trip-end',
 			mileage: Number.parseInt(input.value, 10),
+		}).then(() => {
+			state.currentTrip = null;
+			return updateEntries(state);
+		}).then(state => {
+			window.renderApp(state);
 		});
 	},
 }
@@ -55,16 +67,21 @@ const paymentForm = {
 		`;
 	},
 
-	handler() {
+	handler(state) {
 		const input = document.getElementById('price');
 		submit({
 			type: 'payment',
 			price: Number.parseInt(input.value, 10),
+		}).then(() => {
+			return updateEntries(state);
+		}).then(state => {
+			window.renderApp(state);
 		});
 	},
 };
 
-export default option => {
+export default state => {
+	const option = state.currentForm();
 	const form = ({
 		startTrip: startTripForm,
 		endTrip: endTripForm,
@@ -73,7 +90,7 @@ export default option => {
 
 	function handler (event) {
 		event.preventDefault();
-		form.handler.apply(this, arguments);
+		return form.handler(state);
 	}
 
 	return html`

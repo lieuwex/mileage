@@ -1,14 +1,12 @@
 import _ from 'lodash';
 
-import { entriesPromise } from './entries.js';
-
 // REVIEW: option for not average but last price?
-export function avgPrice () {
-	return entriesPromise.then(entries => {
+export function avgPrice (state) {
+	return state.entriesPromise.then(() => {
 		let distance = 0;
 		const prices = [];
 
-		for (const entry of entries) {
+		for (const entry of state.entries) {
 			switch (entry.type) {
 			case 'mileage':
 				distance += entry.endMileage - entry.beginMileage;
@@ -31,10 +29,10 @@ export function avgPrice () {
 	});
 }
 
-export function unpayedDistance() {
-	return entriesPromise.then(entries => {
+export function unpayedDistance (state) {
+	return state.entriesPromise.then(() => {
 		let distance = 0;
-		for (const entry of entries) {
+		for (const entry of state.entries) {
 			switch (entry.type) {
 			case 'mileage':
 				distance += entry.endMileage - entry.beginMileage;
@@ -49,10 +47,10 @@ export function unpayedDistance() {
 	});
 }
 
-export function estimatedPrice() {
+export function estimatedPrice (state) {
 	return Promise.all([
-		avgPrice(),
-		unpayedDistance(),
+		avgPrice(state),
+		unpayedDistance(state),
 	]).then(([ price, distance ]) => {
 		console.log(price, distance);
 		return price * distance;

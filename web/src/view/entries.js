@@ -8,21 +8,6 @@ import {
 	sameDate,
 } from './utils.js';
 
-export let entriesPromise = undefined;
-function fetchEntries () {
-	entriesPromise = fetch('/entries')
-		.then(r => r.json())
-		.then(entries => entries.map(entry => {
-			entry.beginDate = entry.beginDate && new Date(entry.beginDate);
-			entry.endDate = new Date(entry.endDate);
-			entry.distance = entry.endMileage - entry.beginMileage;
-			return entry;
-		}))
-	;
-	setTimeout(fetchEntries, 1000*60); // 1 minute
-}
-fetchEntries();
-
 const entryElem = entry => {
 	const makeRow = (key, value) => {
 		return html`
@@ -69,10 +54,10 @@ const entryElem = entry => {
 	`;
 };
 
-export const entriesList = () => html`
+export const entriesList = state => html`
 	<div id="entries">
 		${until(
-			entriesPromise.then(entries => entries.map(entryElem).reverse()),
+			state.entriesPromise.then(() => state.entries.map(entryElem).reverse()),
 			html`<span class="loading">Loading entries...</span>`
 		)}
 	</div>

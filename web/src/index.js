@@ -1,73 +1,19 @@
-import { html, render } from 'lit-html/lib/lit-extended';
-import { until } from 'lit-html/lib/until';
+import { render } from 'lit-html/lib/lit-extended';
 
-import currentPrice from './currentPrice.js'
-import form from './form.js';
-import { entriesList } from './entries.js';
-import { loading } from './utils.js';
+import Model from './model.js';
+import view from './view/view.js';
+import { updateEntries } from './api/api.js';
 
-let choosenForm = 'startTrip';
-const radioOnChange = event => {
-	const el = event.target;
-	if (!el.checked) {
-		return;
-	}
-
-	choosenForm = ({
-		trip: 'startTrip',
-		payment: 'payment',
-	})[el.id];
-	renderApp();
-};
-const formSwitchPanel = () => currentTrip.then(trip => {
-	if (trip != null) {
-		return undefined;
-	}
-
-	return html`
-		<form>
-			<label>
-				Add trip
-				<input
-					type="radio"
-					id="trip"
-					name="formSwitch"
-					onchange=${radioOnChange}
-					checked=${choosenForm === 'startTrip'} />
-			</label>
-
-			<label>
-				Add payment
-				<input
-					type="radio"
-					id="payment"
-					name="formSwitch"
-					onchange=${radioOnChange}
-					checked=${choosenForm === 'payment'} />
-			</label>
-		</form>
-	`;
-});
-
-// TODO: automatically update this
-const currentTrip = fetch('/currentTrip').then(r => r.json());
-
-const currentForm = () => currentTrip.then(r => {
-	const formType = r == null ?
-		choosenForm :
-		'endTrip';
-
-	return form(formType);
-});
-
-const app = () => html`
-	${currentPrice()}
-	${until(formSwitchPanel(), loading)}
-	${until(currentForm(), loading)}
-	${entriesList()}
-`;
-
-function renderApp () {
-	render(app(), document.body);
+window.renderApp = function (state) {
+	render(view(state), document.body);
 }
-renderApp();
+
+let state = new Model();
+window.renderApp(state);
+
+async function updateLoop () {
+	state = await updateEntries(state);
+	window.renderApp(state);
+	// setTimeout(updateLoop, 1000*60); // 1 minute
+}
+updateLoop(state);
