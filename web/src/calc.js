@@ -46,8 +46,5 @@ export function unpayedDistance (state) {
 }
 
 export function estimatedPrice (state) {
-	const price = avgPrice(state);
-	const distance = unpayedDistance(state);
-	console.log(price, distance);
-	return price * distance;
+	return avgPrice(state) * unpayedDistance(state);
 }

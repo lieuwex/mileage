@@ -1,11 +1,7 @@
 import { html } from 'lit-html';
 import { unpayedDistance, estimatedPrice } from '../calc.js';
-import { until } from 'lit-html/lib/until';
-import { loading } from './utils.js';
 
 const mileageInfo = distance => {
-	console.log('distance', distance);
-
 	return html`
 		<span id="distance">
 			<b>${distance}</b>km
@@ -14,7 +10,6 @@ const mileageInfo = distance => {
 };
 
 const priceInfo = price => {
-	console.log('price', price);
 	const euros = Math.floor(price);
 	const cents = (price - euros).toFixed(4).slice(2);
 
