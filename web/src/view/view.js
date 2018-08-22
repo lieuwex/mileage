@@ -26,7 +26,7 @@ function radioOnChange (state) {
 }
 
 const formSwitchPanel = state => {
-	if (state.currentTrip != null) {
+	if (state.get('currentTrip') != null) {
 		return undefined;
 	}
 
