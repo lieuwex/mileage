@@ -1,5 +1,5 @@
 import { html } from 'lit-html';
-import { until } from 'lit-html/lib/until';
+import { entries } from '../model.js';
 import {
 	formatDate,
 	formatDateTime,
@@ -56,9 +56,9 @@ const entryElem = entry => {
 
 export const entriesList = state => html`
 	<div id="entries">
-		${until(
-			state.entriesPromise.then(() => state.entries.map(entryElem).reverse()),
-			html`<span class="loading">Loading entries...</span>`
-		)}
+		${state.get('loadingEntries') ?
+			html`<span class="loading">Loading entries...</span>` :
+			entries(state).map(entryElem).reverse()
+		}
 	</div>
 `;

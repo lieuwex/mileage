@@ -1,31 +1,22 @@
-export default class Model {
-	constructor() {
-		this.currentTrip = null;
-		this.choosenForm = 'startTrip';
-		this.entries = [];
+import im from 'immutable';
 
-		this.entriesPromise = new Promise(resolve => {
-			this._done = () => resolve();
-		});
+export default im.Map({
+	choosenForm: 'startTrip',
+
+	currentTrip: null,
+	entries: [],
+
+	loadingEntries: true,
+});
+
+export function currentForm (state) {
+	if (state.get('currentTrip') != null) {
+		return 'endTrip';
 	}
 
-	currentForm() {
-		if (this.currentTrip != null) {
-			return 'endTrip';
-		}
-
-		return this.choosenForm;
-	}
-
-	updateEntries(entries) {
-		this._done();
-		this.entries = entries;
-	}
+	return state.get('choosenForm');
 }
 
-export async function getCurrentTrip (model) {
-	const currentTrip = await fetch('/currentTrip').then(r => r.json());
-	model.currentTrip = currentTrip;
-
-	return model;
+export function entries (state) {
+	return state.toJS().entries;
 }

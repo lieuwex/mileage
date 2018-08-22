@@ -32,14 +32,14 @@ const priceInfo = price => {
 };
 
 export default state => {
-	const info = Promise.all([
-		unpayedDistance(state),
-		estimatedPrice(state),
-	]).then(([ distance, price ]) => {
-		const mInfo = mileageInfo(distance);
-		const pInfo = priceInfo(price);
+	const distance = unpayedDistance(state);
+	const price = estimatedPrice(state);
 
-		return html`
+	const mInfo = mileageInfo(distance);
+	const pInfo = priceInfo(price);
+
+	return html`
+		<div id="currentInfo">
 			${mInfo}
 			${pInfo == null ?
 				undefined :
@@ -47,12 +47,6 @@ export default state => {
 					<span class="divider"></span>
 					${pInfo}
 				`}
-		`
-	});
-
-	return html`
-		<div id="currentInfo">
-			${until(info, loading)}
 		</div>
 	`;
 };

@@ -1,6 +1,7 @@
 import { html } from 'lit-html';
 
 import { updateEntries } from '../api/api.js';
+import { currentForm } from '../model.js';
 
 const submit = info => {
 	return fetch('/add', {
@@ -27,8 +28,8 @@ const startTripForm = {
 			type: 'trip-start',
 			mileage,
 		}).then(res => res.json()).then(trip => {
-			state.currentTrip = trip;
-			window.renderApp(state);
+			window.state = state.set('currentTrip', trip);
+			window.renderApp();
 		});
 	},
 };
@@ -49,10 +50,11 @@ const endTripForm = {
 			type: 'trip-end',
 			mileage: Number.parseInt(input.value, 10),
 		}).then(() => {
-			state.currentTrip = null;
+			state = state.set('currentTrip', null);
 			return updateEntries(state);
 		}).then(state => {
-			window.renderApp(state);
+			window.state = state;
+			window.renderApp();
 		});
 	},
 }
@@ -75,13 +77,14 @@ const paymentForm = {
 		}).then(() => {
 			return updateEntries(state);
 		}).then(state => {
-			window.renderApp(state);
+			window.state = state;
+			window.renderApp();
 		});
 	},
 };
 
 export default state => {
-	const option = state.currentForm();
+	const option = currentForm(state);
 	const form = ({
 		startTrip: startTripForm,
 		endTrip: endTripForm,

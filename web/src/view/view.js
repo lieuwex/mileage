@@ -5,6 +5,7 @@ import currentPrice from './currentPrice.js'
 import form from './form.js';
 import { entriesList } from './entries.js';
 import { loading } from './utils.js';
+import { currentForm } from '../model.js';
 
 // TODO: less state
 function radioOnChange (state) {
@@ -14,12 +15,13 @@ function radioOnChange (state) {
 			return;
 		}
 
-		state.choosenForm = ({
+		const form = ({
 			trip: 'startTrip',
 			payment: 'payment',
 		})[el.id];
+		window.state = state.set('choosenForm', form);
 
-		window.renderApp(state);
+		window.renderApp();
 	};
 }
 
@@ -37,7 +39,7 @@ const formSwitchPanel = state => {
 					id="trip"
 					name="formSwitch"
 					onchange=${radioOnChange(state)}
-					checked=${state.currentForm() === 'startTrip'} />
+					checked=${currentForm(state) === 'startTrip'} />
 			</label>
 
 			<label>
@@ -47,20 +49,16 @@ const formSwitchPanel = state => {
 					id="payment"
 					name="formSwitch"
 					onchange=${radioOnChange(state)}
-					checked=${state.currentForm() === 'payment'} />
+					checked=${currentForm(state) === 'payment'} />
 			</label>
 		</form>
 	`;
 };
 
-function currentForm (state) {
-	return form(state);
-}
-
 export default state => html`
 	${currentPrice(state)}
-	${until(formSwitchPanel(state), loading)}
-	${until(currentForm(state), loading)}
+	${formSwitchPanel(state)}
+	${form(state)}
 	${entriesList(state)}
 `;
 
