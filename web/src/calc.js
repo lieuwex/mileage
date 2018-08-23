@@ -1,50 +1,37 @@
-import _ from 'lodash';
+import _ from 'lodash/fp';
 
 import { entries } from './model.js';
 
 // REVIEW: option for not average but last price?
-export function avgPrice (state) {
-	let distance = 0;
-	const prices = [];
-
-	for (const entry of entries(state)) {
-		switch (entry.type) {
-		case 'mileage':
-			distance += entry.endMileage - entry.beginMileage;
-			break;
-
-		case 'payment':
-			if (distance !== 0) {
-				prices.push(entry.price / distance);
-				distance = 0;
+export const avgPrice = state =>
+	_.flow(
+		_.reduce(([ distance, prices ], entry) => {
+			switch (entry.type) {
+			case 'mileage':
+				distance += entry.endMileage - entry.beginMileage;
+				return [ distance, prices ];
+			case 'payement':
+				if (distance !== 0) {
+					prices.push(entry.price / distance);
+					return [ 0, prices ];
+				}
 			}
-			break;
 
-		default:
-			console.warn(`unknown type '${entry.type}', skipping...`);
-			break;
-		}
-	}
+			return [ distance, prices ];
+		}, [ 0, [] ]),
+		_.last,
+		_.mean,
+	)(entries(state));
 
-	return _.mean(prices);
-}
+export const unpayedDistance = state =>
+	_.flow(
+		_.takeRightWhile(entry => entry.type !== 'payment'),
+		_.reduce(
+			(distance, entry) =>
+				distance + (entry.endMileage - entry.beginMileage),
+			0
+		),
+	)(entries(state));
 
-export function unpayedDistance (state) {
-	let distance = 0;
-	for (const entry of entries(state)) {
-		switch (entry.type) {
-		case 'mileage':
-			distance += entry.endMileage - entry.beginMileage;
-			break;
-
-		case 'payment':
-			distance = 0;
-			break;
-		}
-	}
-	return distance;
-}
-
-export function estimatedPrice (state) {
-	return avgPrice(state) * unpayedDistance(state);
-}
+export const estimatedPrice = state =>
+	avgPrice(state) * unpayedDistance(state);
