@@ -10,7 +10,7 @@ export const avgPrice = state =>
 			case 'mileage':
 				distance += entry.endMileage - entry.beginMileage;
 				return [ distance, prices ];
-			case 'payement':
+			case 'payment':
 				if (distance !== 0) {
 					prices.push(entry.price / distance);
 					return [ 0, prices ];
