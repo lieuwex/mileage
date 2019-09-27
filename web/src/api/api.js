@@ -14,10 +14,13 @@ async function getCurrentTrip () {
 }
 
 export async function updateEntries (state) {
+	const currentTrip = await getCurrentTrip();
 	const entries = await getEntries();
+
 	return state.merge({
 		loadingEntries: false,
 		entries,
+		currentTrip,
 	});
 }
 
